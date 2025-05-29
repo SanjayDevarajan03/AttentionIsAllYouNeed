@@ -5,3 +5,6 @@ venv/
 data/
 /data
 /data/
+
+___pycache___/
+__pycache__/

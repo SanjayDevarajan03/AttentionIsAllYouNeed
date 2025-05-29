@@ -5,9 +5,6 @@ import numpy as np
 from typing import Optional, Tuple
 
 
-
-    
-
 class PositionalEmbedding:
     def __init__(self, vocab_size, d_model, max_len = 500):
         super().__init__()
