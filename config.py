@@ -2,15 +2,20 @@ import pandas as pd
 
 from datetime import datetime, UTC
 from dotenv import load_dotenv, find_dotenv
-from pydantic_settings import BaseSettings, SettingsConfigDict
+#from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from src.setup.paths import PARENT_DIR
-from src.feature_pipeline.data_sourcing import Year
+#from src.setup.paths import PARENT_DIR
+#from src.feature_pipeline.data_sourcing import Year
 import os 
 from pathlib import Path 
 
+BATCH_SIZE = 32
+EPOCHS = 10
+LEARNING_RATE = 1e-4
+HIDDEN_DIM = 512
 
-env_file_path = PARENT_DIR.joinpath(".env") 
+
+'''env_file_path = PARENT_DIR.joinpath(".env") 
 _ = load_dotenv(env_file_path) 
 
 
@@ -49,16 +54,16 @@ class GeneralConfig(BaseSettings):
     database_public_url: str
 
 
-config = GeneralConfig()
+config = GeneralConfig()'''
 
 PARENT_DIR = Path("_file_").parent.resolve()
 
-IMAGES_DIR = Path.joinpath(PARENT_DIR, "images")
+#IMAGES_DIR = Path.joinpath(PARENT_DIR, "images")
 DATA_DIR = Path.joinpath(PARENT_DIR, "data")
 
 RAW_DATA_DIR = DATA_DIR/"raw"
 
-MODELS_DIR = PARENT_DIR/"models"
+'''MODELS_DIR = PARENT_DIR/"models"
 LOCAL_SAVE_DIR = MODELS_DIR/"locally_created"
 COMET_SAVE_DIR = MODELS_DIR/"comet_downloads"
 
@@ -89,4 +94,4 @@ def make_fundamental_paths() -> None:
 if __name__ == "__main__":
     os.chdir(PARENT_DIR)
     print(PARENT_DIR)
-    
+    '''

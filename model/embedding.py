@@ -5,13 +5,7 @@ import numpy as np
 from typing import Optional, Tuple
 
 
-class WordEmbedding(nn.Module):
-    def __init__(self, vocab_size, embedding_dim):
-        super().__init__()
-        self.Embedding = nn.Embedding(vocab_size, embedding_dim)
 
-    def forward(self, input_ids: torch.Tensor) -> torch.Tensor:
-        return self.Embedding(input_ids)
     
 
 class PositionalEmbedding:
@@ -37,33 +31,3 @@ class PositionalEmbedding:
         token_emb = self.token_embedding(x) * math.sqrt(self.d_model)
         pos_enc = self.pe[:, :seq_len, :].to(x.device)
         return token_emb + pos_enc # Shape: (batch_size, seq_len, d_model)
-
-'''
-class PositionalEncoding(nn.Module):
-    def __init__(self, max_len, embedding_dim):
-        super().__init__()
-        self.encoding = torch.zeros(max_len, embedding_dim)
-        self.encoding.requires_grad = False
-
-        position = torch.arange(0, max_len, dtype=torch.float32)
-        position = position.unsqueeze(1)
-
-        div_term = torch.exp(torch.arange(0, embedding_dim, 2, dtype=torch.float32) * -(math.log(10000.0) / embedding_dim))
-
-        self.encoding[:, 0::2] = torch.sin(position * div_term)
-        self.encoding[:, 1::2] = torch.cos(position * div_term)
-
-        self.encoding = self.encoding.unsqueeze(0)
-
-    def forward(self, x):
-        return x + self.encoding[:, : x.size(1)]
-    
-
-class TokenEmbedding(nn.Module):
-    def __init__(self, vocab_size, embedding_dim):
-        super().__init__()
-        self.embedding = nn.Embedding(vocab_size, embedding_dim=embedding_dim)
-
-    def forward(self, x):
-        return self.embedding + math.sqrt(self.embedding_dim)
-'''

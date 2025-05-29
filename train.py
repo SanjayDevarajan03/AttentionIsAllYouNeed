@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-import torch.optim
+import torch.optim as optim
 
 class Lang:
     def __init__(self, name):
@@ -10,7 +10,7 @@ class Lang:
         self.index2word = {0: "SOS", 1: "EOS", 2: "PAD"}
 
 
-class NeuralNetwork:
+class NeuralNetwork(nn.Module):
     def __init__(self, vocab_size, emb_dim):
         super().__init__()
         self.flatten = nn.Flatten()
