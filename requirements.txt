@@ -5,3 +5,4 @@ numpy
 transformers
 datasets
 python-dotenv
+torchtyping

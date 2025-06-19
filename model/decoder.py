@@ -2,19 +2,36 @@ import torch
 import torch.nn as nn
 from torchtyping import TensorType
 
-class GPT:
+class GPT(nn.Module):
     def __init__(self, vocab_size: int, context_length: int, model_dim: int, num_blocks: int, num_heads: int):
         super().__init__()
         torch.manual_seed(0)
-        self.net = nn.Sequential(
-            nn.Linear(28*28, 64)
-        )
+        self.token_embeddings = nn.Embedding(vocab_size, model_dim)
+        self.positional_embeddings = nn.Embedding(context_length, model_dim)
+        self.transformerblock = nn.Sequential()
+        for i in range(num_blocks):
+            self.transformerblock.append(self.TransformerBlock(model_dim, num_heads))
+        self.final_norm = nn.LayerNorm(model_dim)
+        self.vocab_projection = nn.Linear(model_dim, vocab_size)
+
+
+    def forward(self, context: TensorType[int]) -> TensorType[int]:
+        torch.manual_seed(0)   
+        embedded = self.token_embeddings(context)
+        context_length = context.shape[1]
+        positions = torch.arange(context_length)
+        embedded = embedded + self.positional_embedding(positions)
+        raw_output = self.vocab_projection(self.final_norm(self.transformer_blocks(embedded)))
+        probabilities = nn.functional.softmax(raw_output,dim=-1)
+
+        return torch.round(probabilities, decimals=4)
+
 
     class TransformerBlock(nn.Module):
 
-        class MultiHeadAttention(nn.Module):
+        class MultiHeadedSelfAttention(nn.Module):
             
-            class SingleHeadAttention:
+            class SingleHeadAttention(nn.Module):
                 def __init__(self, embedding_dim, attention_dim):
                     super().__init__()
                     torch.manual_seed(0)
@@ -34,7 +51,7 @@ class GPT:
                     lower_triangular = torch.tril(torch.ones(context_length, context_length))
                     mask = lower_triangular == 0
                     scores = scores.masked_fill(mask, float('-inf'))
-                    scores = nn.Softmax(scores, dim=2)
+                    scores = nn.functional.softmax(scores, dim=2)
 
                     return torch.round(torch.matmul(scores, value), decimals=4)
                 
@@ -53,7 +70,7 @@ class GPT:
                 concatenated = torch.cat(head_outputs, dim=2)
                 return concatenated
             
-        class NeuralNetwork:
+        class NeuralNetwork(nn.Module):
             def __init__(self, model_dim: int):
                 super().__init__()
                 torch.manual_seed(0)
@@ -69,7 +86,7 @@ class GPT:
         def __init__(self, model_dim: int, num_heads: int):
             super().__init__()
             torch.manual_seed(0)
-            self.attention = self.MultiHeadSelfAttention(model_dim, num_heads)
+            self.attention = self.MultiHeadAttention(model_dim, num_heads)
             self.linear_network = self.NeuralNetwork(model_dim)
             self.first_norm = nn.LayerNorm(model_dim)
             self.second_norm = nn.LayerNorm(model_dim)

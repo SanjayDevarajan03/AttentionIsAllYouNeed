@@ -5,8 +5,9 @@ import numpy as np
 from typing import Optional, Tuple
 
 class PositionalEncoding(nn.Module):
-    def __init__(self, vocab_size,d_model,max_len=500):
+    def __init__(self, vocab_size,d_model,att_dim,max_len=512):
         super().__init__()
+        # d_model - embedding dimension
         self.token_embedding = nn.Embedding(vocab_size, d_model)
         self.d_model = d_model
 
