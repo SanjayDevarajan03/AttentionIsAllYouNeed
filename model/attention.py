@@ -9,7 +9,20 @@ import numpy as np
 
 
 class MultiHeadAttention(nn.Module):
-    def __init__(self, embedding_dim: int, attention_dim: int, num_heads: int):
+    def __init__(self, attention_dim: int, embedding_dim: int, num_heads: int):
+        super().__init__()
+        torch.manual_seed(0)
+        self.att_heads = nn.ModuleList()
+        for i in range(num_heads):
+            self.att_heads.append(self.SingleHeadAttention(embedding_dim, attention_dim//num_heads))
+
+    def forward(self, embedded: TensorType[float]) -> TensorType[float]:
+        head_outputs = []
+        for head in self.att_heads:
+            head_outputs.append(head(embedded))
+        concatenated = torch.cat(head_outputs, dim=2)
+        return torch.round(concatenated, decimals=4)
+    """def __init__(self, embedding_dim: int, attention_dim: int, num_heads: int):
         super().__init__()
         torch.manual_seed(0)
         self.att_heads = nn.ModuleList()
@@ -21,10 +34,10 @@ class MultiHeadAttention(nn.Module):
         for head in self.att_heads:
             head_outputs.append(head(embedded))
         concatenated = torch.cat(head_outputs, dim=2)
-        return torch.round(concatenated, decimals=4)
+        return torch.round(concatenated, decimals=4)"""
 
     class SingleHeadAttention(nn.Module):
-        def __init__(self, embedding_dim, attention_dim):
+        def __init__(self, embedding_dim: int, attention_dim: int):
             super().__init__()
             torch.manual_seed(0)
             self.key = nn.Linear(embedding_dim, attention_dim, bias=False)
